@@ -30,24 +30,29 @@ import Floating from "@/app/[lang]/patients/components/Floating";
 import MainLayout from "@/app/[lang]/patients/components/MainLayout";
 import LinkToResearchers from "@/app/[lang]/patients/components/LinkToResearchers";
 import MapControls from "@/components/map/MapControls";
-import { FilterContextProvider as FilterProvider, FilterStateDebugger } from "@/lib/filters";
+import {
+  FilterContextProvider as FilterProvider,
+  FilterStateDebugger,
+} from "@/lib/filters";
+import { MapProvider } from "@/lib/map/context";
+
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <FilterProvider>
-      <Map />
-      <Floating
-        className={
-          "top-0 left-0 w-fit h-screen flex flex-row justify-start items-end gap-2"
-        }
-      >
-        <MainLayout>{children}</MainLayout>
-        <MapControls />
-      </Floating>
-      <Floating className={"top-0 right-0"}>
-        <LinkToResearchers />
-      </Floating>
-      <FilterStateDebugger />
-
-    </FilterProvider>
+    <MapProvider>
+      <FilterProvider>
+        <Map />
+        <Floating
+          className={
+            "top-0 left-0 w-fit h-screen flex flex-row justify-start items-end gap-2"
+          }
+        >
+          <MainLayout>{children}</MainLayout>
+          <MapControls />
+        </Floating>
+        <Floating className={"top-0 right-0"}>
+          <LinkToResearchers />
+        </Floating>
+      </FilterProvider>
+    </MapProvider>
   );
 }
