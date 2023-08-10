@@ -6,25 +6,6 @@ import React, { use } from "react";
 import { useEffect } from "react";
 import { useMarkers } from "@/lib/map/hooks";
 
-export const data = [
-  {
-    position: { lat: 36.8065, lng: 10.1815 },
-    name: "Tunis",
-    adress: "Tunis",
-    phone: "Tunis",
-    website: "Tunis",
-    email: "Tunis",
-  },
-  {
-    position: { lat: 15.5527, lng: 48.5164 },
-    name: "Yemen",
-    adress: "Yemen",
-    phone: "Yemen",
-    website: "Yemen",
-    email: "Yemen",
-  },
-];
-
 export default function Map() {
   const { setMap, setLoading, setBounds, setMarkers } = useMap();
   useEffect(() => {
@@ -54,7 +35,16 @@ export default function Map() {
         streetViewControl: false,
         fullscreenControl: false,
         minZoom: 3,
-        maxZoom: 9,
+        maxZoom: 13,
+        restriction: {
+          latLngBounds: {
+            north: 90,
+            south: -90,
+            west: -180,
+            east: 180,
+          },
+          strictBounds: false,
+        },
       };
 
       // Create the map instance
@@ -91,7 +81,6 @@ export default function Map() {
     };
     loadGoogleMapsScript();
   }, []);
-  setMarkers(data);
   useMarkers();
 
   return (

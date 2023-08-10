@@ -53,6 +53,9 @@ dependencies:
   framer-motion:
     specifier: ^10.13.1
     version: 10.13.1(react-dom@18.2.0)(react@18.2.0)
+  google-map-bounds-limit:
+    specifier: ^0.1.0
+    version: 0.1.0
   next:
     specifier: ^13.4.12
     version: 13.4.12(react-dom@18.2.0)(react@18.2.0)
@@ -2052,6 +2055,10 @@ packages:
       ignore: 5.2.4
       merge2: 1.4.1
       slash: 4.0.0
+    dev: false
+
+  /google-map-bounds-limit@0.1.0:
+    resolution: {integrity: sha512-Fgr7PGLwBxx77VHz6YxCKjX6ppX29l4BcqKCtS5bbITH4V9zcFVSSA5iWkQ3qundcIFFevBFmJlGRRJ4B+cNCw==}
     dev: false
 
   /gopd@1.0.1:

@@ -6,7 +6,7 @@ import { ButtonGroup, IconButton } from "@mui/joy";
 import { useMap } from "@/lib/map/context";
 
 export default function MapControls() {
-  const { map } = useMap();
+  const { map, setMarkers, markers, addMarker, removeMarker } = useMap();
   return (
     <div className={"flex flex-col gap-2 items-center"}>
       <ButtonGroup
@@ -24,8 +24,7 @@ export default function MapControls() {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude,
                   };
-                  const image =
-                    "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
+                  const image = "/Vector.svg";
                   const locationMarker = new google.maps.Marker({
                     position: pos,
                     map,

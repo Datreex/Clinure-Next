@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  Dispatch,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import React, { ReactNode } from "react";
 import ReactDOMServer from "react-dom/server";
 import MarkerInfoWindow from "@/components/map/MarkerInfoWindow";
@@ -12,7 +18,7 @@ interface LatLng {
   lng: number;
 }
 
-interface Marker {
+export interface Marker {
   position: LatLng;
   name: string;
   adress: string;
@@ -26,10 +32,12 @@ interface MapContextType {
   loading: boolean;
   error: Error | null;
   markers: Marker[];
+  createdMarkers: google.maps.Marker[];
   bounds: google.maps.LatLngBounds | null;
   setMap: (map: google.maps.Map | null) => void;
   setLoading: (loading: boolean) => void;
   setMarkers: (markers: Marker[]) => void;
+  setCreatedMarkers: (markers: google.maps.Marker[]) => void;
   addMarker: (marker: Marker) => void;
   removeMarker: (marker: Marker) => void;
   setBounds: (bounds: google.maps.LatLngBounds | null) => void;
@@ -40,10 +48,12 @@ const MapContext = createContext<MapContextType>({
   loading: true,
   error: null,
   markers: [],
+  createdMarkers: [],
   bounds: null,
   setMap: (map) => {},
   setLoading: (loading) => {},
   setMarkers: (markers) => {},
+  setCreatedMarkers: (markers) => {},
   addMarker: (marker) => {},
   removeMarker: (marker) => {},
   setBounds: (bounds) => {},
@@ -59,6 +69,9 @@ export const MapProvider: React.FC<MapProviderProps> = ({ children }) => {
   const [markers, setMarkers] = useState<Marker[]>([]);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [bounds, setBounds] = useState<google.maps.LatLngBounds | null>(null);
+  const [createdMarkers, setCreatedMarkers] = useState<google.maps.Marker[]>(
+    []
+  );
 
   return (
     <MapContext.Provider
@@ -67,10 +80,19 @@ export const MapProvider: React.FC<MapProviderProps> = ({ children }) => {
         loading,
         error,
         markers,
+        createdMarkers,
         bounds,
         setMap,
         setLoading,
         setMarkers,
+        setCreatedMarkers: (markers) => {
+          setCreatedMarkers((prevMarkers) => {
+            prevMarkers.forEach((marker) => {
+              marker.setMap(null);
+            });
+            return markers;
+          });
+        },
         addMarker: (marker) => {
           setMarkers((prevMarkers) => [...prevMarkers, marker]);
         },
