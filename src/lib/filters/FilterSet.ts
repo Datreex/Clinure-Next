@@ -4,10 +4,10 @@ import { FilterProperties, FilterState, publisher } from "./types";
 
 const DEFAULT_FILTER_STATE: FilterState = {
   "studies.phase": FilterDefaults.phases,
-  "studies.status": FilterDefaults.status,
-  "studies.conditions": [],
-  "studies.interventions": [],
-  "studies.studyStart": FilterDefaults.studyStart,
+  "studies.overall_status": FilterDefaults.status,
+  "browse_conditions.mesh_terms": [],
+  "browse_interventions.mesh_terms": [],
+  "studies.start_date": FilterDefaults.studyStart,
 };
 
 export class FilterSet implements publisher<FilterState, FilterProperties> {

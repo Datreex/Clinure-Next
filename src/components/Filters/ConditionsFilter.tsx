@@ -36,12 +36,11 @@ async function fetchConditions(val: string) {
     {
       mutexKey: "conditions",
       progressCallback(result: ProgressResult) {
-        console.log(result);
+        // console.log(result);
       },
     },
   );
 }
-
 const useFetch = (fn: typeof fetchConditions) => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<string[] | undefined>();
@@ -67,7 +66,7 @@ export const ConditionsFilter = () => {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const { trigger, loading, data, error } = useFetch(fetchConditions);
-  const [state, setState] = useFilterSlice("studies.conditions");
+  const [state, setState] = useFilterSlice("browse_conditions.mesh_terms");
   return (
     <Box>
       <Typography level="body-md" fontWeight="lg">

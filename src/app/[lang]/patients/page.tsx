@@ -21,8 +21,9 @@ import { StatusFilter } from "@/components/Filters/StatusFilter";
 import { ConditionsFilter } from "@/components/Filters/ConditionsFilter";
 import { InterventionsFilter } from "@/components/Filters/InterventionsFilter";
 import { StartDateFilter } from "@/components/Filters/StartDateFilter";
-import { Button } from "@mui/joy";
-
+import { Button, Divider } from "@mui/joy";
+import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
+import { CountResults } from "@/app/[lang]/patients/components/Count";
 export default function Patients() {
   return (
     <CommonLayout
@@ -32,13 +33,25 @@ export default function Patients() {
       }
     >
       <div className={"flex flex-col gap-3"}>
-        <ConditionsFilter />
-        <InterventionsFilter />
+        <div className={"p-2 border-[1.5px] rounded-lg flex gap-3 flex-col"}>
+          <ConditionsFilter />
+          <Divider orientation="horizontal">or</Divider>
+
+          <InterventionsFilter />
+        </div>
         <PhaseFilter />
         <StatusFilter />
-        <StartDateFilter/>
-        <RelativeLink href={"list"}>
-        <Button>Apply</Button></RelativeLink>
+        <StartDateFilter />
+        <div
+          className={
+            "sticky bottom-0 w-full bg-white pt-1.5 rounded-2xl flex justify-between items-center"
+          }
+        >
+          <CountResults />
+          <RelativeLink href={"list"}>
+            <Button endDecorator={<DoneRoundedIcon />}>Apply</Button>
+          </RelativeLink>
+        </div>
       </div>
     </CommonLayout>
   );

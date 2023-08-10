@@ -38,7 +38,8 @@ export const PhaseFilter = () => {
                   if (e.target.checked) {
                     setState([...state, phase]);
                   } else {
-                    setState(state.filter((p) => p !== phase));
+                    if (state.length > 1)
+                      setState(state.filter((p) => p !== phase));
                   }
                 }}
               />

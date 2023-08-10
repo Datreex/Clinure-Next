@@ -19,9 +19,9 @@ export interface publisher<stateType, idType> {
 }
 export interface FilterState {
   "studies.phase"?: (typeof FilterDefaults.phases)[number][];
-  "studies.status"?: (typeof FilterDefaults.status)[number][];
-  "studies.conditions"?: string[];
-  "studies.interventions"?: string[];
-  "studies.studyStart"?: Date;
+  "studies.overall_status"?: (typeof FilterDefaults.status)[number][];
+  "browse_conditions.mesh_terms"?: string[];
+  "browse_interventions.mesh_terms"?: string[];
+  "studies.start_date"?: Date;
 }
 export type FilterProperties = keyof FilterState;

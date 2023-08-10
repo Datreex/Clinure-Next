@@ -5,10 +5,9 @@ import { CubeProvider } from "@cubejs-client/react";
 import { ReactNode } from "react";
 
 export const cubeJsApi = cubejs(
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTE0OTMwMjB9.Q5YiWLWuggMXFT_wLKvxBRWmJcD75dfTc66KW9ut7Bg",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2OTE1OTEwMDksImV4cCI6MTY5MTY3NzQwOX0.ACg93SqvNygUvp2M6shJkUvd0lvc98bMDoAV93ep2KY",
   {
-    apiUrl:
-      "https://peach-salamander.aws-us-east-1.cubecloudapp.dev/dev-mode/dev-mahdichaari01-c11e4b35/cubejs-api/v1",
+    apiUrl: "http://localhost:4000/cubejs-api/v1",
   },
 );
 
