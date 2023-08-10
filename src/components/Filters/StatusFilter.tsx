@@ -12,7 +12,7 @@ import {
 } from "@mui/joy";
 
 export const StatusFilter = () => {
-  const [state, setState] = useFilterSlice("studies.status");
+  const [state, setState] = useFilterSlice("studies.overall_status");
   if (state === undefined) throw new Error("StatusFilter: state is undefined");
   if (state instanceof Date) throw new Error("StatusFilter: state is a date");
   return (
@@ -36,7 +36,8 @@ export const StatusFilter = () => {
                   if (e.target.checked) {
                     setState([...state, phase]);
                   } else {
-                    setState(state.filter((p) => p !== phase));
+                    if (state.length > 1)
+                      setState(state.filter((p) => p !== phase));
                   }
                 }}
               />

@@ -36,7 +36,7 @@ async function fetchInterventions(val: string) {
     {
       mutexKey: "conditions",
       progressCallback(result: ProgressResult) {
-        console.log(result);
+        // console.log(result);
       },
     },
   );
@@ -69,7 +69,7 @@ export const InterventionsFilter = () => {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const { trigger, loading, data, error } = useFetch(fetchInterventions);
-  const [state, setState] = useFilterSlice("studies.interventions");
+  const [state, setState] = useFilterSlice("browse_interventions.mesh_terms");
   return (
     <Box>
       <Typography level="body-md" fontWeight="lg">
@@ -81,7 +81,7 @@ export const InterventionsFilter = () => {
         that are either investigational or already available.
       </FormHelperText>
       <Autocomplete
-      id="interventions-filter"
+        id="interventions-filter"
         autoComplete
         autoSelect
         freeSolo

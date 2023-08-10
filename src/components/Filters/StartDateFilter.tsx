@@ -20,12 +20,11 @@ import { Popover } from "@mui/material";
 import { useState } from "react";
 
 export const StartDateFilter = () => {
-  const [state, setState] = useFilterSlice("studies.studyStart");
+  const [state, setState] = useFilterSlice("studies.start_date");
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     setAnchorEl(event.currentTarget);
-    
   };
 
   const handleClose = () => {
@@ -48,22 +47,26 @@ export const StartDateFilter = () => {
       {/* <Input value={format(state, "MM/dd/yyyy")} readOnly onClick={()=>setOpen(true)} /> */}
 
       {/* <Button onClick={handleClick} variant="outlined" sx={{width:"100%"}}>{format(state,)}</Button> */}
-      <Input value={state.toLocaleDateString("fr-fr")} readOnly onClick={handleClick} />
+      <Input
+        value={state.toLocaleDateString("fr-fr")}
+        readOnly
+        onClick={handleClick}
+      />
       <Popover
         open={open}
         id="datepicker-filter"
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
+          vertical: "top",
+          horizontal: "left",
         }}
         transformOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
+          vertical: "bottom",
+          horizontal: "left",
         }}
         sx={{
-          borderRadius:"50px"
+          borderRadius: "50px",
         }}
       >
         <DayPicker
@@ -77,7 +80,6 @@ export const StartDateFilter = () => {
             before: FilterDefaults.studyStart,
           }}
           defaultMonth={state}
-          
         />
       </Popover>
     </Box>
