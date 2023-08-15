@@ -1,12 +1,15 @@
 "use client";
-import { cubeJsApi } from "@/Providers/Cube";
 import {
   Autocomplete,
+  AutocompleteOption,
   Box,
   Button,
+  Chip,
   FormControl,
   FormHelperText,
   FormLabel,
+  ListItem,
+  ListItemButton,
   Typography,
 } from "@mui/joy";
 import {
@@ -16,56 +19,38 @@ import {
   useMemo,
   useState,
 } from "react";
-import { ProgressResult } from "@cubejs-client/core";
 import { createPortal } from "react-dom";
-import SyntaxHighlighter from "react-syntax-highlighter";
 import { useFilterSlice } from "@/lib/filters";
-
-async function fetchConditions(val: string) {
-  return await cubeJsApi.load(
-    {
-      dimensions: ["browse_conditions.mesh_term"],
-      filters: [
-        {
-          member: "browse_conditions.downcase_mesh_term",
-          operator: "contains",
-          values: [val.toLowerCase()],
-        },
-      ],
-    },
-    {
-      mutexKey: "conditions",
-      progressCallback(result: ProgressResult) {
-        // console.log(result);
-      },
-    },
-  );
-}
-const useFetch = (fn: typeof fetchConditions) => {
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<string[] | undefined>();
-  const [error, setError] = useState<Error | undefined>();
-
-  const trigger = useCallback(
-    (val: string) => {
-      setLoading(true);
-      fn(val)
-        .then((data) => {
-          // @ts-ignore
-          setData(data.rawData().map((d) => d["browse_conditions.mesh_term"]));
-        })
-        .catch(setError)
-        .finally(() => setLoading(false));
-    },
-    [fn],
-  );
-  return { trigger, loading, data, error };
-};
+import { useQuery } from "@tanstack/react-query";
 
 export const ConditionsFilter = () => {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const { trigger, loading, data, error } = useFetch(fetchConditions);
+  // const { trigger, loading,  } = useFetch(fetchConditions);
+  let url = ` /api/options?dimension=browse_conditions.mesh_term&filter=${JSON.stringify(
+    {
+      member: "browse_conditions.downcase_mesh_term",
+      operator: "contains",
+      values: [inputValue.toLowerCase()],
+    },
+  )}`;
+  const {
+    isLoading: loading,
+    error,
+    refetch: trigger,
+    data,
+  } = useQuery<string[]>({
+    queryKey: ["conditions", inputValue],
+    queryFn: async () => {
+      const response = await fetch(url);
+      return await response.json();
+    },
+    refetchOnWindowFocus: false,
+    enabled: false,
+  });
+  useEffect(() => {
+    if (inputValue.length > 2) trigger();
+  }, [trigger, inputValue]);
   const [state, setState] = useFilterSlice("browse_conditions.mesh_terms");
   return (
     <Box>
@@ -92,7 +77,21 @@ export const ConditionsFilter = () => {
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => {
           setInputValue(newInputValue);
-          if (newInputValue.length > 2) trigger(newInputValue);
+          // if (newInputValue.length > 2) trigger();
+        }}
+        renderOption={(props, option, state) => {
+          return (
+            <AutocompleteOption {...props} key={option}>
+              {option}
+            </AutocompleteOption>
+          );
+        }}
+        renderTags={(tagValue, getTagProps) => {
+          return tagValue.map((option, index) => (
+            <Chip {...getTagProps({ index })} key={option}>
+              {option}
+            </Chip>
+          ));
         }}
       />
       {/*<Debugger>*/}
@@ -103,18 +102,4 @@ export const ConditionsFilter = () => {
       {/*</Debugger>*/}
     </Box>
   );
-};
-
-const Debugger = ({ children }: PropsWithChildren) => {
-  //create a portal to the body so that the debugger can be used anywhere
-  const portal = useMemo(() => document.createElement("div"), []);
-  portal.className =
-    "fixed bottom-0 right-0 z-100 w-1/2 h-1/2 bg-white overflow-auto";
-  useEffect(() => {
-    document.body.appendChild(portal);
-    return () => {
-      document.body.removeChild(portal);
-    };
-  }, [portal]);
-  return createPortal(<>{children}</>, portal);
 };

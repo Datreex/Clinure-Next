@@ -44,7 +44,7 @@ export default function Patients() {
         <StartDateFilter />
         <div
           className={
-            "sticky bottom-0 w-full bg-white pt-1.5 rounded-2xl flex justify-between items-center"
+            "sticky bottom-0 w-full bg-white pt-1.5 border-t-2 border-neutral-300 flex justify-between items-center "
           }
         >
           <CountResults />

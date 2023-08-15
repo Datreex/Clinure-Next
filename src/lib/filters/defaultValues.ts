@@ -14,6 +14,6 @@ export const FilterDefaults = {
     "Not yet recruiting",
     "Recruiting",
   ],
-  studyStart: new Date("1-1-" + (new Date().getFullYear() - 3)),
+  studyStart: new Date(new Date().getFullYear() - 3 + "-01-01"),
   // studyEnd: new Date(),
 };

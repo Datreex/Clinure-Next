@@ -8,8 +8,8 @@ export default function CommonLayout(props: {
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <div className={"sticky top-0 bg-white w-full p-2 z-20"}>
+    <div className={"h-full w-full flex flex-col justify-between"}>
+      <div className={"shrink-0 bg-white w-full p-2 z-20"}>
         <div className={"flex flex-row items-center gap-2"}>
           {props.backLink && (
             <RelativeLink href={props.backLink}>
@@ -22,7 +22,11 @@ export default function CommonLayout(props: {
           {props.description}
         </p>
       </div>
-      <div className={`p-2`}>{props.children}</div>
-    </>
+      <div
+        className={`p-2 h-full grow-0 overflow-y-scroll relative cleanScrollbar`}
+      >
+        {props.children}
+      </div>
+    </div>
   );
 }

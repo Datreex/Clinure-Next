@@ -1,9 +1,9 @@
 "use client";
-import { cubeJsApi } from "@/Providers/Cube";
 import {
   Autocomplete,
   Box,
   Button,
+  Chip,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -20,55 +20,35 @@ import { ProgressResult } from "@cubejs-client/core";
 import { createPortal } from "react-dom";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { useFilterSlice } from "@/lib/filters";
-
-async function fetchInterventions(val: string) {
-  return await cubeJsApi.load(
-    {
-      dimensions: ["browse_interventions.mesh_term"],
-      filters: [
-        {
-          member: "browse_interventions.downcase_mesh_term",
-          operator: "contains",
-          values: [val.toLowerCase()],
-        },
-      ],
-    },
-    {
-      mutexKey: "conditions",
-      progressCallback(result: ProgressResult) {
-        // console.log(result);
-      },
-    },
-  );
-}
-
-const useFetch = (fn: typeof fetchInterventions) => {
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<string[] | undefined>();
-  const [error, setError] = useState<Error | undefined>();
-
-  const trigger = useCallback(
-    (val: string) => {
-      setLoading(true);
-      fn(val)
-        .then((data) => {
-          setData(
-            // @ts-ignore
-            data.rawData().map((d) => d["browse_interventions.mesh_term"]),
-          );
-        })
-        .catch(setError)
-        .finally(() => setLoading(false));
-    },
-    [fn],
-  );
-  return { trigger, loading, data, error };
-};
+import { useQuery } from "@tanstack/react-query";
 
 export const InterventionsFilter = () => {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const { trigger, loading, data, error } = useFetch(fetchInterventions);
+  let url = `/api/options?dimension=browse_interventions.mesh_term&filter=${JSON.stringify(
+    {
+      member: "browse_interventions.downcase_mesh_term",
+      operator: "contains",
+      values: [inputValue.toLowerCase()],
+    },
+  )}`;
+  const {
+    isLoading: loading,
+    error,
+    refetch: trigger,
+    data,
+  } = useQuery<string[]>({
+    queryKey: ["interventions", inputValue],
+    queryFn: async () => {
+      const response = await fetch(url);
+      return await response.json();
+    },
+    refetchOnWindowFocus: false,
+    enabled: false,
+  });
+  useEffect(() => {
+    if (inputValue.length > 2) trigger();
+  }, [trigger, inputValue]);
   const [state, setState] = useFilterSlice("browse_interventions.mesh_terms");
   return (
     <Box>
@@ -96,7 +76,20 @@ export const InterventionsFilter = () => {
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => {
           setInputValue(newInputValue);
-          if (newInputValue.length > 2) trigger(newInputValue);
+        }}
+        // renderOption={(props, option) => {
+        //   return (
+        //     <li {...props} key={option}>
+        //       {option}
+        //     </li>
+        //   );
+        // }}
+        renderTags={(tagValue, getTagProps) => {
+          return tagValue.map((option, index) => (
+            <Chip {...getTagProps({ index })} key={option}>
+              {option}
+            </Chip>
+          ));
         }}
       />
 
@@ -108,18 +101,4 @@ export const InterventionsFilter = () => {
       {/*</Debugger>*/}
     </Box>
   );
-};
-
-const Debugger = ({ children }: PropsWithChildren) => {
-  //create a portal to the body so that the debugger can be used anywhere
-  const portal = useMemo(() => document.createElement("div"), []);
-  portal.className =
-    "fixed bottom-0 right-0 z-100 w-1/2 h-1/2 bg-white overflow-auto";
-  useEffect(() => {
-    document.body.appendChild(portal);
-    return () => {
-      document.body.removeChild(portal);
-    };
-  }, [portal]);
-  return createPortal(<>{children}</>, portal);
 };

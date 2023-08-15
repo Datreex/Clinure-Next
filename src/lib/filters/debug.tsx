@@ -5,7 +5,7 @@ import { useFilterFullState } from "./hooks";
 
 const FilterStateDebugger_ = () => {
   const state = useFilterFullState();
-  console.log(state);
+  // console.log(state);
   return (
     <SyntaxHighlighter language="json" wrapLines>
       {JSON.stringify(state, null, 2)}

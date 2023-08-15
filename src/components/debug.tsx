@@ -15,7 +15,8 @@ export const DEBUGGER = ({ data }: { data: any }) => {
       document.body.appendChild(portal);
     }
     return () => {
-      if (portal) document.body.removeChild(portal);
+      if (portal && document && document.body && document.body.contains(portal))
+        document.body.removeChild(portal);
     };
   }, [portal]);
   if (!portal) return null;

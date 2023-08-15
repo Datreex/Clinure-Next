@@ -12,6 +12,7 @@ import ReactDOMServer from "react-dom/server";
 import MarkerInfoWindow from "@/components/map/MarkerInfoWindow";
 import { set } from "date-fns";
 import { useMarkers } from "./hooks";
+import { MarkerClusterer } from "@googlemaps/markerclusterer";
 
 interface LatLng {
   lat: number;
@@ -21,10 +22,10 @@ interface LatLng {
 export interface Marker {
   position: LatLng;
   name: string;
-  adress: string;
-  phone: string;
-  website: string;
-  email: string;
+  // adress?: string;
+  // phone?: string;
+  // website?: string;
+  // email?: string;
 }
 
 interface MapContextType {
@@ -32,12 +33,16 @@ interface MapContextType {
   loading: boolean;
   error: Error | null;
   markers: Marker[];
+  cluster?: MarkerClusterer;
   createdMarkers: google.maps.Marker[];
   bounds: google.maps.LatLngBounds | null;
   setMap: (map: google.maps.Map | null) => void;
   setLoading: (loading: boolean) => void;
   setMarkers: (markers: Marker[]) => void;
-  setCreatedMarkers: (markers: google.maps.Marker[]) => void;
+  setCreatedMarkers: (
+    markers: google.maps.Marker[],
+    cluster?: MarkerClusterer,
+  ) => void;
   addMarker: (marker: Marker) => void;
   removeMarker: (marker: Marker) => void;
   setBounds: (bounds: google.maps.LatLngBounds | null) => void;
@@ -70,8 +75,9 @@ export const MapProvider: React.FC<MapProviderProps> = ({ children }) => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [bounds, setBounds] = useState<google.maps.LatLngBounds | null>(null);
   const [createdMarkers, setCreatedMarkers] = useState<google.maps.Marker[]>(
-    []
+    [],
   );
+  const [cluster, setCluster] = useState<MarkerClusterer | undefined>();
 
   return (
     <MapContext.Provider
@@ -82,15 +88,22 @@ export const MapProvider: React.FC<MapProviderProps> = ({ children }) => {
         markers,
         createdMarkers,
         bounds,
+        cluster,
         setMap,
         setLoading,
         setMarkers,
-        setCreatedMarkers: (markers) => {
+        setCreatedMarkers: (markers, cluster) => {
           setCreatedMarkers((prevMarkers) => {
             prevMarkers.forEach((marker) => {
               marker.setMap(null);
             });
             return markers;
+          });
+          setCluster((prevState) => {
+            if (prevState) {
+              prevState.clearMarkers();
+            }
+            return cluster;
           });
         },
         addMarker: (marker) => {

@@ -53,7 +53,7 @@ export default function Map() {
       if (mapElement) {
         map = new google.maps.Map(
           mapElement as HTMLElement,
-          mapOptions as google.maps.MapOptions
+          mapOptions as google.maps.MapOptions,
         );
         setMap(map);
       } else {
@@ -66,7 +66,7 @@ export default function Map() {
           const bounds = map.getBounds();
           if (bounds) {
             setBounds(bounds);
-            console.log(bounds);
+            // console.log(bounds);
           }
         });
         google.maps.event.addListener(map, "zoom_changed", () => {

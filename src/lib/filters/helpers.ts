@@ -1,5 +1,6 @@
 import { FilterState } from "@/lib/filters/types";
 import { Filter } from "@cubejs-client/core";
+import { format } from "date-fns";
 export const toCubeFilter = (filter: FilterState): Filter[] => {
   const filters: Filter[] = [];
   if (
@@ -55,7 +56,10 @@ export const toCubeFilter = (filter: FilterState): Filter[] => {
     filters.push({
       member: "studies.start_date",
       operator: "afterDate",
-      values: [filter["studies.start_date"]?.toLocaleDateString("en-US")],
+      values: [
+        //YYYY-MM-DD
+        format(filter["studies.start_date"], "yyyy-MM-dd"),
+      ],
     });
   }
   filters.push({
